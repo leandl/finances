@@ -1,30 +1,14 @@
 import Head from "next/head";
-import { PageLayout, Header, Text } from "@primer/react";
-
-import styles from "./index.module.css";
-
-const contentWidthClasses = {
-  small: styles.smallContent,
-} as const;
-
-type PageLayoutContentWidth = "full" | "medium";
-
-type CustomContentWidth = keyof typeof contentWidthClasses;
+import { Header, PageLayout, Text } from "@/interface/design-system";
 
 type DefaultLayoutProps = {
   children: React.ReactNode;
-  contentWidth?: PageLayoutContentWidth | CustomContentWidth;
+  contentWidth?: "full" | "medium" | "small";
   metadata?: {
     title?: string;
     description?: string;
   };
 };
-
-function isCustomContentWidth(
-  contentWidth: DefaultLayoutProps["contentWidth"],
-): contentWidth is CustomContentWidth {
-  return contentWidth !== undefined && contentWidth in contentWidthClasses;
-}
 
 export function DefaultLayout({
   children,
@@ -33,15 +17,6 @@ export function DefaultLayout({
 }: DefaultLayoutProps) {
   const title = metadata?.title ? `${metadata.title} · Finances` : "Finances";
   const currentYear = new Date().getFullYear();
-
-  let extraContentClassName: string | undefined;
-  let pageLayoutContentWidth: PageLayoutContentWidth | undefined;
-
-  if (isCustomContentWidth(contentWidth)) {
-    extraContentClassName = contentWidthClasses[contentWidth];
-  } else {
-    pageLayoutContentWidth = contentWidth;
-  }
 
   return (
     <>
@@ -63,14 +38,9 @@ export function DefaultLayout({
         </Header.Item>
       </Header>
       <PageLayout>
-        <PageLayout.Content
-          className={extraContentClassName}
-          width={pageLayoutContentWidth}
-        >
-          {children}
-        </PageLayout.Content>
-        <PageLayout.Footer divider="line">
-          <Text size="small">© {currentYear} Clone Finances.</Text>
+        <PageLayout.Content width={contentWidth}>{children}</PageLayout.Content>
+        <PageLayout.Footer>
+          <Text size="small">© {currentYear} My Finances.</Text>
         </PageLayout.Footer>
       </PageLayout>
     </>

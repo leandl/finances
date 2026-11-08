@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
+import { Banner } from "@/interface/design-system";
 import { DefaultLayout } from "@/interface/default-layout";
-import { Banner } from "@primer/react";
 
 import { useRouter } from "next/router";
 
@@ -73,7 +73,7 @@ export default function ActivateUserPage() {
         <Banner variant="success">
           <Banner.Title>Cadastro ativado com sucesso</Banner.Title>
           <Banner.Description>
-            Sua conta está ativa e você já ṕde{" "}
+            Sua conta está ativa e você já pode{" "}
             <a href="/login">fazer o login</a>.
           </Banner.Description>
         </Banner>

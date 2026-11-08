@@ -1,0 +1,28 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-space-1);
+  height: 100%;
+  padding: var(--ds-space-4);
+  background: var(--ds-color-surface);
+  border: 1px solid var(--ds-color-line);
+  border-radius: var(--ds-radius-md);
+}
+
+.heading {
+  margin: 0;
+  font-size: var(--ds-text-sm);
+  font-weight: 600;
+  color: var(--ds-color-ink-muted);
+}
+
+.description {
+  font-size: var(--ds-text-xl);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.metadata {
+  font-size: var(--ds-text-sm);
+  color: var(--ds-color-ink-muted);
+}

@@ -1,0 +1,50 @@
+.banner {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-space-1);
+  padding: var(--ds-space-4);
+  border: 1px solid;
+  border-left-width: 4px;
+  border-radius: var(--ds-radius-md);
+}
+
+.compact {
+  padding: var(--ds-space-2) var(--ds-space-3);
+}
+
+.title {
+  font-weight: 700;
+}
+
+.description {
+  font-size: var(--ds-text-sm);
+}
+
+.description a {
+  color: inherit;
+  font-weight: 600;
+}
+
+.info {
+  color: var(--ds-color-info-ink);
+  background: var(--ds-color-info-bg);
+  border-color: var(--ds-color-info-line);
+}
+
+.success {
+  color: var(--ds-color-success-ink);
+  background: var(--ds-color-success-bg);
+  border-color: var(--ds-color-success-line);
+}
+
+.warning {
+  color: var(--ds-color-warning-ink);
+  background: var(--ds-color-warning-bg);
+  border-color: var(--ds-color-warning-line);
+}
+
+.critical {
+  color: var(--ds-color-critical-ink);
+  background: var(--ds-color-critical-bg);
+  border-color: var(--ds-color-critical-line);
+}

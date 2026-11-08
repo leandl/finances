@@ -1,0 +1,38 @@
+.control {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-space-2);
+}
+
+.label {
+  font-size: var(--ds-text-sm);
+  font-weight: 600;
+}
+
+.input {
+  min-height: 2.5rem;
+  padding: 0 var(--ds-space-3);
+  font: inherit;
+  color: var(--ds-color-ink);
+  background: var(--ds-color-surface);
+  border: 1px solid var(--ds-color-line-strong);
+  border-radius: var(--ds-radius-md);
+}
+
+.input:hover {
+  border-color: var(--ds-color-ink-muted);
+}
+
+.input:focus-visible {
+  border-color: var(--ds-color-focus);
+  outline-offset: 0;
+}
+
+.input:disabled {
+  background: var(--ds-color-canvas);
+  cursor: not-allowed;
+}
+
+.block {
+  width: 100%;
+}

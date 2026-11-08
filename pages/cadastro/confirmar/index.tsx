@@ -1,5 +1,5 @@
+import { Banner } from "@/interface/design-system";
 import { DefaultLayout } from "@/interface/default-layout";
-import { Banner } from "@primer/react";
 
 export default function ConfirmRegisterPage() {
   return (

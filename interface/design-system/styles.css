@@ -1,0 +1,112 @@
+/* Tokens + base global. Importado uma única vez em pages/_app.tsx */
+:root {
+  /* Esquema de cores: segue o sistema. Para forçar um tema, use
+     <html data-theme="light"> ou <html data-theme="dark"> (regras abaixo). */
+  color-scheme: light dark;
+
+  /* Cores — light-dark(claro, escuro) */
+  --ds-color-canvas: light-dark(#f3f6f5, #0f1715);
+  --ds-color-surface: light-dark(#ffffff, #17211e);
+  --ds-color-ink: light-dark(#15211e, #e6eeeb);
+  --ds-color-ink-muted: light-dark(#56665f, #9db0aa);
+  --ds-color-line: light-dark(#d6dedb, #2a3834);
+  --ds-color-line-strong: light-dark(#aab8b3, #475a54);
+  --ds-color-primary: light-dark(#0e5a4a, #2fa58a);
+  --ds-color-primary-hover: light-dark(#0a4538, #46bfa3);
+  --ds-color-on-primary: light-dark(#ffffff, #06201a);
+  --ds-color-focus: light-dark(#1673c4, #5aa9f0);
+  --ds-color-link: light-dark(#0e5a4a, #5fd0b5);
+
+  --ds-color-info-bg: light-dark(#e7f0f8, #12283a);
+  --ds-color-info-line: light-dark(#5b9bd0, #4d8fc4);
+  --ds-color-info-ink: light-dark(#123b5c, #bcdcf5);
+  --ds-color-success-bg: light-dark(#e2f3e9, #11301f);
+  --ds-color-success-line: light-dark(#3f9f6b, #3f9f6b);
+  --ds-color-success-ink: light-dark(#0f4a2b, #b5e8cb);
+  --ds-color-warning-bg: light-dark(#fbf0d9, #35280c);
+  --ds-color-warning-line: light-dark(#d09a2b, #c89a2e);
+  --ds-color-warning-ink: light-dark(#5c3e04, #f0d9a0);
+  --ds-color-critical-bg: light-dark(#fbe6e4, #3a1613);
+  --ds-color-critical-line: light-dark(#d4574e, #d4574e);
+  --ds-color-critical-ink: light-dark(#6b1510, #f6c1bc);
+
+  /* Tipografia */
+  --ds-font-sans:
+    system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial,
+    sans-serif;
+  --ds-text-sm: 0.875rem;
+  --ds-text-md: 1rem;
+  --ds-text-lg: 1.25rem;
+  --ds-text-xl: 1.75rem;
+  --ds-text-2xl: 2.25rem;
+
+  /* Espaçamento (escala de 4px) */
+  --ds-space-1: 0.25rem;
+  --ds-space-2: 0.5rem;
+  --ds-space-3: 0.75rem;
+  --ds-space-4: 1rem;
+  --ds-space-6: 1.5rem;
+  --ds-space-8: 2rem;
+  --ds-space-12: 3rem;
+
+  /* Forma */
+  --ds-radius-sm: 4px;
+  --ds-radius-md: 8px;
+
+  /* Layout */
+  --ds-width-small: 30rem;
+  --ds-width-medium: 48rem;
+  --ds-width-full: 80rem;
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--ds-color-canvas);
+  color: var(--ds-color-ink);
+  font-family: var(--ds-font-sans);
+  font-size: var(--ds-text-md);
+  line-height: 1.5;
+}
+
+#__next {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+a {
+  color: var(--ds-color-link);
+  text-underline-offset: 0.15em;
+}
+
+:focus-visible {
+  outline: 2px solid var(--ds-color-focus);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}

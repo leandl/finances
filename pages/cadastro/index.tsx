@@ -1,5 +1,11 @@
 import { SubmitEvent, useState } from "react";
-import { Button, FormControl, TextInput, Stack, Heading } from "@primer/react";
+import {
+  Button,
+  FormControl,
+  Heading,
+  Stack,
+  TextInput,
+} from "@/interface/design-system";
 import { DefaultLayout } from "@/interface/default-layout";
 
 export default function RegisterPage() {

@@ -1,0 +1,31 @@
+.stack {
+  display: flex;
+  flex-direction: column;
+}
+
+.horizontal {
+  flex-direction: row;
+}
+
+@media (min-width: 48rem) {
+  .responsive {
+    flex-direction: row;
+  }
+}
+
+.condensed {
+  gap: var(--ds-space-2);
+}
+
+.normal {
+  gap: var(--ds-space-4);
+}
+
+.spacious {
+  gap: var(--ds-space-8);
+}
+
+.grow {
+  flex: 1 1 0;
+  min-width: 0;
+}

@@ -1,8 +1,7 @@
 import { DefaultLayout } from "@/interface/default-layout";
 
 const metadata = {
-  description:
-    "O Finances é um lugar para construir uma comunidade de desenvolvedores.",
+  description: "O Finances é um lugar para sua finaças pessoais",
 };
 
 function Home() {

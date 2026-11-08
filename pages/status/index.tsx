@@ -1,11 +1,9 @@
 import useSWR from "swr";
 import { DefaultLayout } from "@/interface/default-layout";
-import { Banner, Heading, Stack } from "@primer/react";
+import { Banner, Card, Heading, Stack } from "@/interface/design-system";
 
 import { OutputFromHandler } from "@/models/authorization";
 import { features } from "@/models/feature";
-
-import { Card } from "@primer/react/dist/Card";
 
 type ApplicationStatus = OutputFromHandler<typeof features.READ.STATUS.DEFAULT>;
 
@@ -77,7 +75,7 @@ function Database({ isLoading, database, error }: DatabaseProps) {
       <Heading as="h2" variant="medium">
         Database
       </Heading>
-      <Stack direction={{ narrow: "vertical", regular: "horizontal" }}>
+      <Stack direction="responsive">
         <Stack.Item grow>
           <Card>
             <Card.Heading>Open connections</Card.Heading>
