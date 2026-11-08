@@ -1,5 +1,6 @@
 import { SubmitEvent, useState } from "react";
 import {
+  Banner,
   Button,
   FormControl,
   Heading,
@@ -29,9 +30,13 @@ function RegisterForm() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   async function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
+    setIsSubmitting(true);
+    setErrorMessage("");
 
     const requestBody = {
       username,
@@ -39,22 +44,40 @@ function RegisterForm() {
       password,
     };
 
-    const response = await fetch("/api/v1/users", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(requestBody),
-    });
+    try {
+      const response = await fetch("/api/v1/users", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestBody),
+      });
 
-    if (response.status === 201) {
-      location.href = "/cadastro/confirmar";
+      if (response.status === 201) {
+        location.href = "/cadastro/confirmar";
+      }
+
+      const responseBody = await response.json();
+      setErrorMessage(`${responseBody.message} ${responseBody.action}`);
+    } catch {
+      setErrorMessage(
+        "Houve uma falha de conexão com o servidor. Tente novamente mais tarde.",
+      );
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
   return (
     <form onSubmit={handleSubmit}>
       <Stack gap="normal">
+        {errorMessage && (
+          <Banner variant="critical">
+            <Banner.Title>Não foi possível fazer o login.</Banner.Title>
+            <Banner.Description>{errorMessage}</Banner.Description>
+          </Banner>
+        )}
+
         <FormControl>
           <FormControl.Label>Nome de usuário</FormControl.Label>
           <TextInput
@@ -91,8 +114,8 @@ function RegisterForm() {
           />
         </FormControl>
         <Stack.Item>
-          <Button variant="primary" type="submit">
-            Criar cadastro
+          <Button variant="primary" type="submit" disabled={isSubmitting}>
+            {isSubmitting ? "Criando cadastro..." : "Criar cadastro"}
           </Button>
         </Stack.Item>
       </Stack>
