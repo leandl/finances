@@ -1,46 +1,93 @@
-/* Tokens + base global. Importado uma única vez em pages/_app.tsx */
+
+/* =========================================
+   DESIGN TOKENS — MIDNIGHT FINANCE
+========================================= */
+
 :root {
-  /* Esquema de cores: segue o sistema. Para forçar um tema, use
-     <html data-theme="light"> ou <html data-theme="dark"> (regras abaixo). */
   color-scheme: light dark;
 
-  /* Cores — light-dark(claro, escuro) */
-  --ds-color-canvas: light-dark(#f3f6f5, #0f1715);
-  --ds-color-surface: light-dark(#ffffff, #17211e);
-  --ds-color-ink: light-dark(#15211e, #e6eeeb);
-  --ds-color-ink-muted: light-dark(#56665f, #9db0aa);
-  --ds-color-line: light-dark(#d6dedb, #2a3834);
-  --ds-color-line-strong: light-dark(#aab8b3, #475a54);
-  --ds-color-primary: light-dark(#0e5a4a, #2fa58a);
-  --ds-color-primary-hover: light-dark(#0a4538, #46bfa3);
-  --ds-color-on-primary: light-dark(#ffffff, #06201a);
-  --ds-color-focus: light-dark(#1673c4, #5aa9f0);
-  --ds-color-link: light-dark(#0e5a4a, #5fd0b5);
+  /* Backgrounds */
+  --ds-color-canvas: light-dark(#f3f4f8, #111522);
+  --ds-color-surface: light-dark(#ffffff, #1c2233);
+  --ds-color-surface-raised: light-dark(#f9f9fc, #242b3e);
+  --ds-color-surface-sunken: light-dark(#eaecf3, #171d2c);
 
-  --ds-color-info-bg: light-dark(#e7f0f8, #12283a);
-  --ds-color-info-line: light-dark(#5b9bd0, #4d8fc4);
-  --ds-color-info-ink: light-dark(#123b5c, #bcdcf5);
-  --ds-color-success-bg: light-dark(#e2f3e9, #11301f);
-  --ds-color-success-line: light-dark(#3f9f6b, #3f9f6b);
-  --ds-color-success-ink: light-dark(#0f4a2b, #b5e8cb);
-  --ds-color-warning-bg: light-dark(#fbf0d9, #35280c);
-  --ds-color-warning-line: light-dark(#d09a2b, #c89a2e);
-  --ds-color-warning-ink: light-dark(#5c3e04, #f0d9a0);
-  --ds-color-critical-bg: light-dark(#fbe6e4, #3a1613);
-  --ds-color-critical-line: light-dark(#d4574e, #d4574e);
-  --ds-color-critical-ink: light-dark(#6b1510, #f6c1bc);
+  /* Typography */
+  --ds-color-ink: light-dark(#20263a, #f0f1fa);
+  --ds-color-ink-muted: light-dark(#85899a, #a0a7bc);
+  --ds-color-ink-subtle: light-dark(#a6a9b7, #727b94);
 
-  /* Tipografia */
+  /* Borders */
+  --ds-color-line: light-dark(#e4e6ee, #30384d);
+  --ds-color-line-strong: light-dark(#cdd1df, #424d65);
+
+  /* Primary — Violet */
+  --ds-color-primary: light-dark(#6658d3, #a99bff);
+  --ds-color-primary-hover: light-dark(#5547c0, #bcb1ff);
+  --ds-color-primary-subtle: light-dark(#edeaff, #302b50);
+  --ds-color-on-primary: light-dark(#ffffff, #17132e);
+
+  /* Secondary — Blue */
+  --ds-color-secondary: light-dark(#4385d1, #79b3f3);
+  --ds-color-secondary-subtle: light-dark(#e8f1fc, #233650);
+
+  /* Interaction */
+  --ds-color-focus: light-dark(#8174ed, #b5a9ff);
+  --ds-color-link: light-dark(#5d50c4, #b5a9ff);
+
+  /* Information */
+  --ds-color-info-bg: light-dark(#eaf1fc, #1e3049);
+  --ds-color-info-line: light-dark(#75a3df, #568bc6);
+  --ds-color-info-ink: light-dark(#28568f, #b7d6fa);
+
+  /* Success */
+  --ds-color-success-bg: light-dark(#e4f5f0, #193b36);
+  --ds-color-success-line: light-dark(#50bda5, #42bda5);
+  --ds-color-success-ink: light-dark(#167d69, #8ce0cc);
+
+  /* Warning */
+  --ds-color-warning-bg: light-dark(#fff3df, #40331e);
+  --ds-color-warning-line: light-dark(#e5ae59, #d5a451);
+  --ds-color-warning-ink: light-dark(#94601d, #f2ce8e);
+
+  /* Critical */
+  --ds-color-critical-bg: light-dark(#fcebed, #40252e);
+  --ds-color-critical-line: light-dark(#e47c87, #d97885);
+  --ds-color-critical-ink: light-dark(#ae3f50, #ffb0b8);
+
+  /* Financial colors */
+  --ds-color-income: light-dark(#159b83, #42c8b5);
+  --ds-color-income-bg: light-dark(#e4f5f0, #193b36);
+
+  --ds-color-expense: light-dark(#d65d6b, #f08089);
+  --ds-color-expense-bg: light-dark(#fcebed, #40252e);
+
+  --ds-color-transfer: light-dark(#4385d1, #79b3f3);
+  --ds-color-transfer-bg: light-dark(#e8f1fc, #233650);
+
+  --ds-color-investment: light-dark(#8872d9, #b09af5);
+  --ds-color-investment-bg: light-dark(#f0ebfc, #30294a);
+
+  /* Charts */
+  --ds-chart-1: light-dark(#6658d3, #a99bff);
+  --ds-chart-2: light-dark(#20a99a, #42c8b5);
+  --ds-chart-3: light-dark(#e5a34b, #f0b765);
+  --ds-chart-4: light-dark(#4385d1, #79b3f3);
+  --ds-chart-5: light-dark(#d65d6b, #f08089);
+  --ds-chart-6: light-dark(#8872d9, #b09af5);
+
+  /* Typography */
   --ds-font-sans:
-    system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial,
-    sans-serif;
+    system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+
   --ds-text-sm: 0.875rem;
   --ds-text-md: 1rem;
   --ds-text-lg: 1.25rem;
   --ds-text-xl: 1.75rem;
   --ds-text-2xl: 2.25rem;
 
-  /* Espaçamento (escala de 4px) */
+  /* Spacing */
   --ds-space-1: 0.25rem;
   --ds-space-2: 0.5rem;
   --ds-space-3: 0.75rem;
@@ -49,15 +96,20 @@
   --ds-space-8: 2rem;
   --ds-space-12: 3rem;
 
-  /* Forma */
-  --ds-radius-sm: 4px;
-  --ds-radius-md: 8px;
+  /* Shape */
+  --ds-radius-sm: 6px;
+  --ds-radius-md: 10px;
+  --ds-radius-lg: 14px;
 
   /* Layout */
   --ds-width-small: 30rem;
   --ds-width-medium: 48rem;
   --ds-width-full: 80rem;
 }
+
+/* =========================================
+   THEME OVERRIDES
+========================================= */
 
 :root[data-theme="light"] {
   color-scheme: light;
@@ -66,6 +118,10 @@
 :root[data-theme="dark"] {
   color-scheme: dark;
 }
+
+/* =========================================
+   GLOBAL STYLES
+========================================= */
 
 *,
 *::before,
