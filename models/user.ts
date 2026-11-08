@@ -1,0 +1,323 @@
+import database from "@/infra/database";
+import password from "@/models/password";
+import { NotFoundError, ValidationError } from "@/infra/errors";
+import { Feature, features } from "./feature";
+
+async function validateUniqueUsername(username: string) {
+  const results = await database.query({
+    text: `
+    SELECT
+      username
+    FROM
+      users
+    WHERE
+      LOWER(username) = LOWER($1)
+    ;`,
+    values: [username],
+  });
+
+  if (results.rowCount > 0) {
+    throw new ValidationError({
+      message: "O username informado já está sendo utilizado.",
+      action: "Utilize outro username para realizar esta operação.",
+    });
+  }
+}
+
+async function validateUniqueEmail(email: string) {
+  const results = await database.query({
+    text: `
+    SELECT
+      email
+    FROM
+      users
+    WHERE
+      LOWER(email) = LOWER($1)
+    ;`,
+    values: [email],
+  });
+
+  if (results.rowCount > 0) {
+    throw new ValidationError({
+      message: "O email informado já está sendo utilizado.",
+      action: "Utilize outro email para realizar esta operação.",
+    });
+  }
+}
+
+function injectDefaultFeaturesInObject(
+  userInputValues: UserCreateDTO,
+): UserCreateDTOWithFeatures {
+  const userInputValuesWithFeatures: UserCreateDTOWithFeatures = {
+    ...userInputValues,
+    features: [features.READ.ACTIVATION_TOKEN],
+  };
+
+  return userInputValuesWithFeatures;
+}
+
+type ChangePasswordDTO = {
+  password: string;
+};
+
+async function hashPasswordInObject(input: ChangePasswordDTO) {
+  const hashedPassword = await password.hash(input.password);
+  input.password = hashedPassword;
+}
+
+async function findOneByUsername(username: string): Promise<User> {
+  return runSelectQuery(username);
+
+  async function runSelectQuery(username: string) {
+    const results = await database.query({
+      text: `
+      SELECT
+        *
+      FROM
+        users
+      WHERE
+        LOWER(username) = LOWER($1)
+      LIMIT
+        1
+      ;`,
+      values: [username],
+    });
+
+    if (results.rowCount === 0) {
+      throw new NotFoundError({
+        message: "O username informado não foi encontrado no sistema.",
+        action: "Verifique se o username está digitado corretamente.",
+      });
+    }
+
+    return results.rows[0];
+  }
+}
+
+async function findOneByEmail(email: string): Promise<User> {
+  return runSelectQuery(email);
+
+  async function runSelectQuery(email: string) {
+    const results = await database.query({
+      text: `
+      SELECT
+        *
+      FROM
+        users
+      WHERE
+        LOWER(email) = LOWER($1)
+      LIMIT
+        1
+      ;`,
+      values: [email],
+    });
+
+    if (results.rowCount === 0) {
+      throw new NotFoundError({
+        message: "O email informado não foi encontrado no sistema.",
+        action: "Verifique se o email está digitado corretamente.",
+      });
+    }
+
+    return results.rows[0];
+  }
+}
+
+async function findOneById(id: string): Promise<User> {
+  return runSelectQuery(id);
+
+  async function runSelectQuery(id: string) {
+    const results = await database.query({
+      text: `
+      SELECT
+        *
+      FROM
+        users
+      WHERE
+        id = $1
+      LIMIT
+        1
+      ;`,
+      values: [id],
+    });
+
+    if (results.rowCount === 0) {
+      throw new NotFoundError({
+        message: "O id informado não foi encontrado no sistema.",
+        action: "Verifique se o id está digitado corretamente.",
+      });
+    }
+
+    return results.rows[0];
+  }
+}
+
+export type User = {
+  id: string;
+  username: string;
+  email: string;
+  features: Feature[];
+  password: string;
+  created_at: Date;
+  updated_at: Date;
+};
+
+export type UserCreateDTO = {
+  username: string;
+  email: string;
+  password: string;
+};
+
+type UserCreateDTOWithFeatures = UserCreateDTO & {
+  features: Feature[];
+};
+
+async function create(userInputValues: UserCreateDTO): Promise<User> {
+  await validateUniqueUsername(userInputValues.username);
+  await validateUniqueEmail(userInputValues.email);
+  await hashPasswordInObject(userInputValues);
+
+  const userInputValuesWithFeatures =
+    injectDefaultFeaturesInObject(userInputValues);
+
+  const newUser = await runInsertQuery(userInputValuesWithFeatures);
+  return newUser;
+
+  async function runInsertQuery(
+    userInputValuesWithFeatures: UserCreateDTOWithFeatures,
+  ) {
+    const results = await database.query({
+      text: `
+      INSERT INTO 
+        users (username, email, password, features) 
+      VALUES 
+        ($1, $2, $3, $4)
+      RETURNING
+        *
+      ;`,
+      values: [
+        userInputValuesWithFeatures.username,
+        userInputValuesWithFeatures.email,
+        userInputValuesWithFeatures.password,
+        userInputValuesWithFeatures.features,
+      ],
+    });
+
+    return results.rows[0];
+  }
+}
+
+type UserUpdateDTO = {
+  username?: string;
+  email?: string;
+  password?: string;
+};
+
+async function update(
+  username: string,
+  userInputValues: UserUpdateDTO,
+): Promise<User> {
+  const currentUser = await findOneByUsername(username);
+
+  if (typeof userInputValues.username === "string") {
+    await validateUniqueUsername(userInputValues.username);
+  }
+
+  if (typeof userInputValues.email === "string") {
+    await validateUniqueEmail(userInputValues.email);
+  }
+
+  if (typeof userInputValues.password === "string") {
+    await hashPasswordInObject(userInputValues as ChangePasswordDTO);
+  }
+
+  const userWithNewValues = { ...currentUser, ...userInputValues };
+  const updatedUser = runUpdatetQuery(userWithNewValues);
+  return updatedUser;
+
+  async function runUpdatetQuery(userWithNewValues: User) {
+    const results = await database.query({
+      text: `
+      UPDATE
+        users
+      SET
+        username = $2,
+        email = $3,
+        password = $4,
+        updated_at = timezone('utc', now())
+      WHERE
+        id = $1
+      RETURNING
+        *
+      ;`,
+      values: [
+        userWithNewValues.id,
+        userWithNewValues.username,
+        userWithNewValues.email,
+        userWithNewValues.password,
+      ],
+    });
+
+    return results.rows[0];
+  }
+}
+
+async function setFeatures(userId: string, features: Feature[]): Promise<User> {
+  const updatedUser = runSetFeaturesQuery(userId, features);
+  return updatedUser;
+
+  async function runSetFeaturesQuery(userId: string, features: Feature[]) {
+    const results = await database.query({
+      text: `
+      UPDATE
+        users
+      SET
+        features = $2,
+        updated_at = timezone('utc', now())
+      WHERE
+        id = $1
+      RETURNING
+        *
+      ;`,
+      values: [userId, features],
+    });
+
+    return results.rows[0];
+  }
+}
+
+async function addFeatures(userId: string, features: Feature[]): Promise<User> {
+  const updatedUser = runSetFeaturesQuery(userId, features);
+  return updatedUser;
+
+  async function runSetFeaturesQuery(userId: string, features: Feature[]) {
+    const results = await database.query({
+      text: `
+      UPDATE
+        users
+      SET
+        features = array_cat(features, $2),
+        updated_at = timezone('utc', now())
+      WHERE
+        id = $1
+      RETURNING
+        *
+      ;`,
+      values: [userId, features],
+    });
+
+    return results.rows[0];
+  }
+}
+
+const user = {
+  create,
+  update,
+  findOneById,
+  findOneByUsername,
+  findOneByEmail,
+  setFeatures,
+  addFeatures,
+};
+
+export default user;
