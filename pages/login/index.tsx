@@ -31,6 +31,18 @@ export default function LoginPage() {
   );
 }
 
+function getSafeRedirect(value: string | string[] | undefined): string {
+  if (
+    typeof value === "string" &&
+    value.startsWith("/") &&
+    !value.startsWith("//")
+  ) {
+    return value;
+  }
+
+  return "/painel";
+}
+
 function LoginForm() {
   const router = useRouter();
   const [email, setEmail] = useState("");
@@ -51,7 +63,7 @@ function LoginForm() {
       });
 
       if (response.status === 201) {
-        await router.push("/");
+        await router.push(getSafeRedirect(router.query.redirect));
         return;
       }
 
