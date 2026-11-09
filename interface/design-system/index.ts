@@ -5,3 +5,6 @@ export { FormControl, TextInput } from "./FormControl";
 export { Header, PageLayout } from "./Layout";
 export { Stack } from "./Stack";
 export { Heading, Text } from "./Typography";
+export { ConfirmModal } from "./ConfirmModal";
+export { FormModal } from "./FormModal";
+export { Modal } from "./Modal";

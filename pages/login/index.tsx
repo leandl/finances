@@ -40,7 +40,7 @@ function getSafeRedirect(value: string | string[] | undefined): string {
     return value;
   }
 
-  return "/painel";
+  return "/contas";
 }
 
 function LoginForm() {
@@ -113,7 +113,7 @@ function LoginForm() {
         </FormControl>
 
         <Stack.Item>
-          <Button variant="primary" type="submit" disabled={isSubmitting}>
+          <Button variant="primary" type="submit" loading={isSubmitting}>
             {isSubmitting ? "Entrando..." : "Entrar"}
           </Button>
         </Stack.Item>

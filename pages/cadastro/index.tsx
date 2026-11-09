@@ -8,6 +8,7 @@ import {
   TextInput,
 } from "@/interface/design-system";
 import { DefaultLayout } from "@/interface/default-layout";
+import { useRouter } from "next/router";
 
 export default function RegisterPage() {
   return (
@@ -27,6 +28,8 @@ export default function RegisterPage() {
 }
 
 function RegisterForm() {
+  const router = useRouter();
+
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -54,7 +57,8 @@ function RegisterForm() {
       });
 
       if (response.status === 201) {
-        location.href = "/cadastro/confirmar";
+        await router.push("/cadastro/confirmar");
+        return;
       }
 
       const responseBody = await response.json();
@@ -114,7 +118,7 @@ function RegisterForm() {
           />
         </FormControl>
         <Stack.Item>
-          <Button variant="primary" type="submit" disabled={isSubmitting}>
+          <Button variant="primary" type="submit" loading={isSubmitting}>
             {isSubmitting ? "Criando cadastro..." : "Criar cadastro"}
           </Button>
         </Stack.Item>

@@ -1,0 +1,51 @@
+.dialog {
+  width: min(30rem, calc(100% - 2 * var(--ds-space-4)));
+  max-height: calc(100dvh - 2 * var(--ds-space-8));
+  margin: 10vh auto auto;
+  padding: 0;
+  overflow: hidden;
+  color: var(--ds-color-ink);
+  background: var(--ds-color-surface);
+  border: 1px solid var(--ds-color-line);
+  border-radius: var(--ds-radius-lg);
+}
+
+.dialog.centered {
+  margin: auto;
+}
+
+.dialog::backdrop {
+  background: rgb(0 0 0 / 0.5);
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  max-height: inherit;
+}
+
+.header {
+  padding: var(--ds-space-4) var(--ds-space-6);
+  border-bottom: 1px solid var(--ds-color-line);
+}
+
+.title {
+  margin: 0;
+  font-size: var(--ds-text-lg);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.body {
+  padding: var(--ds-space-6);
+  overflow-y: auto;
+}
+
+.footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--ds-space-2);
+  padding: var(--ds-space-4) var(--ds-space-6);
+  background: var(--ds-color-surface-raised);
+  border-top: 1px solid var(--ds-color-line);
+}

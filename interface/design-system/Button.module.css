@@ -49,3 +49,27 @@
   opacity: 0.55;
   cursor: not-allowed;
 }
+
+.spinner {
+  flex-shrink: 0;
+  width: 1em;
+  height: 1em;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: spin 700ms linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* O reset global de `prefers-reduced-motion` zera as animações, o que
+   congelaria o spinner. Aqui ele só fica mais lento. */
+@media (prefers-reduced-motion: reduce) {
+  .spinner {
+    animation-duration: 1.5s !important;
+  }
+}
