@@ -4,7 +4,7 @@ import database from "@/infra/database";
 import webserver from "@/infra/webserver";
 import { ForbiddenError, NotFoundError } from "@/infra/errors";
 import authorization from "./authorization";
-import { features } from "./feature";
+import { defaultUserFeatures } from "./feature";
 
 const EXPIRATION_IN_MILLISECONDS = 60 * 15 * 1000; // 15 Minutes in ms
 
@@ -127,12 +127,7 @@ async function activateUserByUserId(userId: string) {
     });
   }
 
-  const activatedUser = user.setFeatures(userId, [
-    features.CREATE.SESSION,
-    features.READ.SESSION,
-    features.UPDATE.USER.DEFAULT,
-    features.READ.STATUS.DEFAULT,
-  ]);
+  const activatedUser = user.setFeatures(userId, [...defaultUserFeatures]);
   return activatedUser;
 }
 

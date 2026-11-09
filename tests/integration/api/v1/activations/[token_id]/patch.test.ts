@@ -1,6 +1,6 @@
 import webserver from "@/infra/webserver";
 import activation from "@/models/activation";
-import { features } from "@/models/feature";
+import { defaultUserFeatures } from "@/models/feature";
 import user from "@/models/user";
 import orchestrator from "tests/orchestrator";
 
@@ -131,12 +131,7 @@ describe("GET /api/v1/migrations", () => {
       );
 
       const activatedUser = await user.findOneById(responseBody.user_id);
-      expect(activatedUser.features).toEqual([
-        features.CREATE.SESSION,
-        features.READ.SESSION,
-        features.UPDATE.USER.DEFAULT,
-        features.READ.STATUS.DEFAULT,
-      ]);
+      expect(activatedUser.features).toEqual(defaultUserFeatures);
     });
 
     test("With valid token, but already activated user", async () => {

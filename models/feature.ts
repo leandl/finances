@@ -11,12 +11,14 @@ export const features = {
       DEFAULT: "read:status",
       ALL: "read:status:all",
     },
+    ACCOUNT: "read:account",
   },
 
   CREATE: {
     SESSION: "create:session",
     USER: "create:user",
     MIGRATION: "create:migration",
+    ACCOUNT: "create:account",
   },
 
   UPDATE: {
@@ -24,6 +26,11 @@ export const features = {
       DEFAULT: "update:user",
       OTHERS: "update:user:others",
     },
+    ACCOUNT: "update:account",
+  },
+
+  DELETE: {
+    ACCOUNT: "delete:account",
   },
 } as const;
 
@@ -48,3 +55,14 @@ function extractFeatures(obj: unknown): Feature[] {
 }
 
 export const availableFeatures = extractFeatures(features);
+
+export const defaultUserFeatures: readonly Feature[] = Object.freeze([
+  features.CREATE.SESSION,
+  features.READ.SESSION,
+  features.UPDATE.USER.DEFAULT,
+  features.READ.STATUS.DEFAULT,
+  features.READ.ACCOUNT,
+  features.CREATE.ACCOUNT,
+  features.UPDATE.ACCOUNT,
+  features.DELETE.ACCOUNT,
+]);

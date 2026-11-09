@@ -9,6 +9,7 @@ import { MailAddress, MailcatcherMessage } from "@/types/infra/email";
 import activation from "@/models/activation";
 import { Feature } from "@/models/feature";
 import webserver from "@/infra/webserver";
+import account from "@/models/account";
 
 const emailHttpUrl = `http://${process.env.EMAIL_HTTP_HOST}:${process.env.EMAIL_HTTP_PORT}`;
 
@@ -92,6 +93,20 @@ async function createSessionWithExpiration(
   return await session.createWithExpiration(userId, expiresInMs);
 }
 
+async function createAuthenticatedUser(userObject?: Partial<UserCreateDTO>) {
+  const createdUser = await createUser(userObject);
+  const activatedUser = await activateUser(createdUser);
+  const sessionObject = await createSession(activatedUser);
+
+  return { user: activatedUser, session: sessionObject };
+}
+
+async function createAccount(userId: string, name?: string) {
+  return await account.create(userId, {
+    name: name ?? faker.string.alphanumeric(12),
+  });
+}
+
 async function deleteAllEmails() {
   await fetch(`${emailHttpUrl}/messages`, {
     method: "DELETE",
@@ -148,6 +163,8 @@ const orchestrator = {
   deleteAllEmails,
   getLastEmail,
   extractUUID,
+  createAuthenticatedUser,
+  createAccount,
 };
 
 export default orchestrator;

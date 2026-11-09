@@ -1,5 +1,5 @@
 import webserver from "@/infra/webserver";
-import { features } from "@/models/feature";
+import { defaultUserFeatures, features } from "@/models/feature";
 import password from "@/models/password";
 import user from "@/models/user";
 import orchestrator from "tests/orchestrator";
@@ -195,12 +195,7 @@ describe("PATCH /api/v1/users/[username]", () => {
       expect(responseBody).toEqual({
         id: responseBody.id,
         username: USERNAME_TEST,
-        features: [
-          features.CREATE.SESSION,
-          features.READ.SESSION,
-          features.UPDATE.USER.DEFAULT,
-          features.READ.STATUS.DEFAULT,
-        ],
+        features: defaultUserFeatures,
         created_at: responseBody.created_at,
         updated_at: responseBody.updated_at,
       });
@@ -238,12 +233,7 @@ describe("PATCH /api/v1/users/[username]", () => {
       expect(responseBody).toEqual({
         id: responseBody.id,
         username: createdUser.username,
-        features: [
-          features.CREATE.SESSION,
-          features.READ.SESSION,
-          features.UPDATE.USER.DEFAULT,
-          features.READ.STATUS.DEFAULT,
-        ],
+        features: defaultUserFeatures,
         created_at: responseBody.created_at,
         updated_at: responseBody.updated_at,
       });
@@ -287,12 +277,7 @@ describe("PATCH /api/v1/users/[username]", () => {
       expect(responseBody).toEqual({
         id: responseBody.id,
         username: createdUser.username,
-        features: [
-          features.CREATE.SESSION,
-          features.READ.SESSION,
-          features.UPDATE.USER.DEFAULT,
-          features.READ.STATUS.DEFAULT,
-        ],
+        features: defaultUserFeatures,
         created_at: responseBody.created_at,
         updated_at: responseBody.updated_at,
       });

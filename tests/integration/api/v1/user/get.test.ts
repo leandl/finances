@@ -2,7 +2,7 @@ import session from "@/models/session";
 import orchestrator from "tests/orchestrator";
 import { version as uuidVersion } from "uuid";
 import setCookieParser from "set-cookie-parser";
-import { features } from "@/models/feature";
+import { defaultUserFeatures } from "@/models/feature";
 import webserver from "@/infra/webserver";
 
 beforeAll(async () => {
@@ -50,12 +50,7 @@ describe("GET /api/v1/user", () => {
         id: user.id,
         username: user.username,
         email: user.email,
-        features: [
-          features.CREATE.SESSION,
-          features.READ.SESSION,
-          features.UPDATE.USER.DEFAULT,
-          features.READ.STATUS.DEFAULT,
-        ],
+        features: defaultUserFeatures,
         created_at: user.created_at.toISOString(),
         updated_at: activatedUser.updated_at.toISOString(),
       });
@@ -128,12 +123,7 @@ describe("GET /api/v1/user", () => {
         id: user.id,
         username: user.username,
         email: user.email,
-        features: [
-          features.CREATE.SESSION,
-          features.READ.SESSION,
-          features.UPDATE.USER.DEFAULT,
-          features.READ.STATUS.DEFAULT,
-        ],
+        features: defaultUserFeatures,
         created_at: user.created_at.toISOString(),
         updated_at: activatedUser.updated_at.toISOString(),
       });

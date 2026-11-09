@@ -5,6 +5,7 @@ import { Session } from "./session";
 import { User } from "./user";
 import { APIStatus } from "./status";
 import { InternalServerError } from "@/infra/errors";
+import { Account } from "./account";
 
 export type UserWithFeatures = {
   features: Feature[];
@@ -19,6 +20,13 @@ type InputPermissionResource<T> = {
   data: T;
 };
 
+function isAccountOwner({
+  userSession,
+  data: account,
+}: InputPermissionResource<Account>): boolean {
+  return isAuthenticatedUser(userSession) && userSession.id === account.user_id;
+}
+
 const PermissionByFeature = {
   [features.UPDATE.USER.DEFAULT]: ({
     userSession,
@@ -31,6 +39,10 @@ const PermissionByFeature = {
       userSession.features.includes(features.UPDATE.USER.OTHERS)
     );
   },
+
+  [features.READ.ACCOUNT]: isAccountOwner,
+  [features.UPDATE.ACCOUNT]: isAccountOwner,
+  [features.DELETE.ACCOUNT]: isAccountOwner,
 } as const;
 
 type PermissionHandlers = typeof PermissionByFeature;
@@ -64,7 +76,7 @@ function can<F extends Feature>(
     return handler({
       userSession,
       data: resource,
-    });
+    } as InputFromPermission<FeatureWithCustomPermission>);
   }
 
   return true;
@@ -159,6 +171,16 @@ const ResourceFilterOutputByFeature = {
         }),
       },
     },
+  }),
+
+  [features.READ.ACCOUNT]: ({
+    data: account,
+  }: InputResourceFilter<Account>) => ({
+    id: account.id,
+    name: account.name,
+    user_id: account.user_id,
+    created_at: account.created_at.toISOString(),
+    updated_at: account.updated_at.toISOString(),
   }),
 } as const;
 

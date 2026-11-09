@@ -1,6 +1,6 @@
 import webserver from "@/infra/webserver";
 import activation from "@/models/activation";
-import { features } from "@/models/feature";
+import { defaultUserFeatures, features } from "@/models/feature";
 import { Session } from "@/models/session";
 import user, { User } from "@/models/user";
 import orchestrator from "tests/orchestrator";
@@ -77,12 +77,7 @@ describe("Use case: Registration Flow (all sucessful)", () => {
     expect(Date.parse(activationResponseBody.used_at)).not.toBeNaN();
 
     const activatedUser = await user.findOneByUsername(USER_TEST.username);
-    expect(activatedUser.features).toEqual([
-      features.CREATE.SESSION,
-      features.READ.SESSION,
-      features.UPDATE.USER.DEFAULT,
-      features.READ.STATUS.DEFAULT,
-    ]);
+    expect(activatedUser.features).toEqual(defaultUserFeatures);
   });
   test("Login", async () => {
     const createSessionResponse = await fetch(
