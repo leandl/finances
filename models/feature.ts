@@ -12,6 +12,7 @@ export const features = {
       ALL: "read:status:all",
     },
     ACCOUNT: "read:account",
+    TRANSACTION: "read:transaction",
   },
 
   CREATE: {
@@ -19,6 +20,7 @@ export const features = {
     USER: "create:user",
     MIGRATION: "create:migration",
     ACCOUNT: "create:account",
+    TRANSACTION: "create:transaction",
   },
 
   UPDATE: {
@@ -27,10 +29,12 @@ export const features = {
       OTHERS: "update:user:others",
     },
     ACCOUNT: "update:account",
+    TRANSACTION: "update:transaction",
   },
 
   DELETE: {
     ACCOUNT: "delete:account",
+    TRANSACTION: "delete:transaction",
   },
 } as const;
 
@@ -61,8 +65,14 @@ export const defaultUserFeatures: readonly Feature[] = Object.freeze([
   features.READ.SESSION,
   features.UPDATE.USER.DEFAULT,
   features.READ.STATUS.DEFAULT,
+
   features.READ.ACCOUNT,
   features.CREATE.ACCOUNT,
   features.UPDATE.ACCOUNT,
   features.DELETE.ACCOUNT,
+
+  features.READ.TRANSACTION,
+  features.CREATE.TRANSACTION,
+  features.UPDATE.TRANSACTION,
+  features.DELETE.TRANSACTION,
 ]);

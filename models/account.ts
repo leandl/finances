@@ -1,6 +1,7 @@
 import { validate as validateUuid } from "uuid";
 import database from "@/infra/database";
 import { NotFoundError, ValidationError } from "@/infra/errors";
+import { PartialUnknown } from "@/infra/types";
 
 const NAME_MAX_LENGTH = 30;
 
@@ -13,8 +14,15 @@ export type Account = {
   deleted_at: Date | null;
 };
 
+export type AccountBalance = {
+  year: number;
+  month: number;
+  year_value: number; // saldo do ano em centavos
+  month_value: number; // saldo do mês em centavos
+};
+
 export type AccountInputDTO = {
-  name?: unknown;
+  name: string;
 };
 
 function validateName(name: unknown): string {
@@ -76,7 +84,7 @@ function accountNotFound() {
 
 async function create(
   userId: string,
-  input?: AccountInputDTO,
+  input?: PartialUnknown<AccountInputDTO>,
 ): Promise<Account> {
   const name = validateName(input?.name);
   await validateUniqueName(userId, name);
@@ -144,7 +152,7 @@ async function findOneById(id: string): Promise<Account> {
 
 async function updateName(
   id: string,
-  input?: AccountInputDTO,
+  input?: PartialUnknown<AccountInputDTO>,
 ): Promise<Account> {
   const currentAccount = await findOneById(id);
   const name = validateName(input?.name);
@@ -192,12 +200,36 @@ async function remove(id: string): Promise<Account> {
   return results.rows[0];
 }
 
+async function getBalances(accountId: string): Promise<AccountBalance[]> {
+  const results = await database.query({
+    text: `
+    SELECT
+      l.year,
+      s.month,
+      l.value AS year_value,
+      s.value AS month_value
+    FROM
+      accounting_ledgers l
+      JOIN accounting_sub_ledgers s ON s.accounting_ledger_id = l.id
+    WHERE
+      l.account_id = $1
+    ORDER BY
+      l.year ASC,
+      s.month ASC
+    ;`,
+    values: [accountId],
+  });
+
+  return results.rows;
+}
+
 const account = {
   create,
   findAllByUserId,
   findOneById,
   updateName,
   remove,
+  getBalances,
   NAME_MAX_LENGTH,
 };
 

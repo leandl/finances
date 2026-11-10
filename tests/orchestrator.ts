@@ -10,6 +10,7 @@ import activation from "@/models/activation";
 import { Feature } from "@/models/feature";
 import webserver from "@/infra/webserver";
 import account from "@/models/account";
+import transaction, { TransactionCreateDTO } from "@/models/transaction";
 
 const emailHttpUrl = `http://${process.env.EMAIL_HTTP_HOST}:${process.env.EMAIL_HTTP_PORT}`;
 
@@ -107,6 +108,23 @@ async function createAccount(userId: string, name?: string) {
   });
 }
 
+async function createTransaction(
+  accountId: string,
+  input?: Partial<TransactionCreateDTO>,
+) {
+  return await transaction.create(accountId, {
+    type: "inbound",
+    value: 1000,
+    description: faker.string.alphanumeric(12),
+    occurred_on: "2026-03-15",
+    ...input,
+  });
+}
+
+async function getAccountBalances(accountId: string) {
+  return await account.getBalances(accountId);
+}
+
 async function deleteAllEmails() {
   await fetch(`${emailHttpUrl}/messages`, {
     method: "DELETE",
@@ -165,6 +183,8 @@ const orchestrator = {
   extractUUID,
   createAuthenticatedUser,
   createAccount,
+  createTransaction,
+  getAccountBalances,
 };
 
 export default orchestrator;

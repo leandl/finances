@@ -1,12 +1,12 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { createRouter } from "next-connect";
 import controller from "@/infra/controller";
-import { ForbiddenError } from "@/infra/errors";
 import account from "@/models/account";
 import authorization from "@/models/authorization";
-import { Feature, features } from "@/models/feature";
 import { User } from "@/models/user";
 import { NextApiRequestWithContext } from "@/types/infra/next";
+import { requireAccountAccess } from "@/infra/require-access";
+import { features } from "@/models/feature";
 
 export default createRouter<NextApiRequest, NextApiResponse>()
   .use(controller.injectAnonymousOrUser)
@@ -15,31 +15,12 @@ export default createRouter<NextApiRequest, NextApiResponse>()
   .delete(controller.canRequest(features.DELETE.ACCOUNT), deleteHandler)
   .handler(controller.errorHandlers);
 
-async function findAuthorizedAccount(
-  request: NextApiRequestWithContext,
-  feature: Feature,
-) {
-  const userTryingToAccess = request.context?.user as User;
-  const accountId = request.query.account_id as string;
-
-  const accountFound = await account.findOneById(accountId);
-
-  if (!authorization.can(userTryingToAccess, feature, accountFound)) {
-    throw new ForbiddenError({
-      message: "Você não possui permissão para acessar esta conta.",
-      action: "Verifique se a conta pertence ao seu usuário.",
-    });
-  }
-
-  return accountFound;
-}
-
 async function getHandler(
   request: NextApiRequestWithContext,
   response: NextApiResponse,
 ) {
   const userTryingToGet = request.context?.user as User;
-  const accountFound = await findAuthorizedAccount(
+  const accountFound = await requireAccountAccess(
     request,
     features.READ.ACCOUNT,
   );
@@ -58,7 +39,7 @@ async function patchHandler(
   response: NextApiResponse,
 ) {
   const userTryingToPatch = request.context?.user as User;
-  const accountFound = await findAuthorizedAccount(
+  const accountFound = await requireAccountAccess(
     request,
     features.UPDATE.ACCOUNT,
   );
@@ -82,7 +63,7 @@ async function deleteHandler(
   response: NextApiResponse,
 ) {
   const userTryingToDelete = request.context?.user as User;
-  const accountFound = await findAuthorizedAccount(
+  const accountFound = await requireAccountAccess(
     request,
     features.DELETE.ACCOUNT,
   );

@@ -6,6 +6,7 @@ import { User } from "./user";
 import { APIStatus } from "./status";
 import { InternalServerError } from "@/infra/errors";
 import { Account } from "./account";
+import { Transaction } from "./transaction";
 
 export type UserWithFeatures = {
   features: Feature[];
@@ -43,6 +44,11 @@ const PermissionByFeature = {
   [features.READ.ACCOUNT]: isAccountOwner,
   [features.UPDATE.ACCOUNT]: isAccountOwner,
   [features.DELETE.ACCOUNT]: isAccountOwner,
+
+  [features.READ.TRANSACTION]: isAccountOwner,
+  [features.CREATE.TRANSACTION]: isAccountOwner,
+  [features.UPDATE.TRANSACTION]: isAccountOwner,
+  [features.DELETE.TRANSACTION]: isAccountOwner,
 } as const;
 
 type PermissionHandlers = typeof PermissionByFeature;
@@ -181,6 +187,19 @@ const ResourceFilterOutputByFeature = {
     user_id: account.user_id,
     created_at: account.created_at.toISOString(),
     updated_at: account.updated_at.toISOString(),
+  }),
+
+  [features.READ.TRANSACTION]: ({
+    data: transaction,
+  }: InputResourceFilter<Transaction>) => ({
+    id: transaction.id,
+    account_id: transaction.account_id,
+    type: transaction.type,
+    value: transaction.value,
+    description: transaction.description,
+    occurred_on: transaction.occurred_on,
+    created_at: transaction.created_at.toISOString(),
+    updated_at: transaction.updated_at.toISOString(),
   }),
 } as const;
 

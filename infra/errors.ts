@@ -1,9 +1,11 @@
+export class ApplicationError extends Error {}
+
 type InternalServerErrorOptions = {
   statusCode?: number;
   cause?: unknown;
 };
 
-export class InternalServerError extends Error {
+export class InternalServerError extends ApplicationError {
   public readonly action = "Entre em contato com o suporte.";
   public statusCode: number;
 
@@ -33,7 +35,7 @@ type ServiceErrorOptions = {
   context?: unknown;
 };
 
-export class ServiceError extends Error {
+export class ServiceError extends ApplicationError {
   public readonly statusCode = 503;
   public action: string;
   public context?: unknown;
@@ -65,7 +67,7 @@ type ValidationErrorOptions = {
   cause?: unknown;
 };
 
-export class ValidationError extends Error {
+export class ValidationError extends ApplicationError {
   public readonly statusCode = 400;
   public action: string;
 
@@ -94,7 +96,7 @@ type UnauthorizedErrorOptions = {
   cause?: unknown;
 };
 
-export class UnauthorizedError extends Error {
+export class UnauthorizedError extends ApplicationError {
   public readonly statusCode = 401;
   public action: string;
 
@@ -123,7 +125,7 @@ type ForbiddenErrorOptions = {
   cause?: unknown;
 };
 
-export class ForbiddenError extends Error {
+export class ForbiddenError extends ApplicationError {
   public readonly statusCode = 403;
   public action: string;
 
@@ -153,7 +155,7 @@ type NotFoundErrorOptions = {
   cause?: unknown;
 };
 
-export class NotFoundError extends Error {
+export class NotFoundError extends ApplicationError {
   public readonly statusCode = 404;
   public action: string;
 
@@ -177,7 +179,7 @@ export class NotFoundError extends Error {
   }
 }
 
-export class MethodNotAllowedError extends Error {
+export class MethodNotAllowedError extends ApplicationError {
   public readonly action =
     "Verifique se o método HTTP enviado é válido para este endpoint.";
   public readonly statusCode = 405;

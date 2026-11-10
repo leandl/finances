@@ -1,5 +1,5 @@
 import { Client } from "pg";
-import { ServiceError } from "./errors";
+import { ApplicationError, ServiceError } from "./errors";
 
 // eslint-disable-next-line  @typescript-eslint/no-explicit-any
 async function query(queryObject: any) {
@@ -29,6 +29,37 @@ function getSSLValues() {
   return process.env.NODE_ENV === "production";
 }
 
+async function transaction<T>(
+  callback: (client: Client) => Promise<T>,
+): Promise<T> {
+  let client;
+
+  try {
+    client = await getNewClient();
+
+    await client.query("BEGIN");
+
+    const result = await callback(client);
+
+    await client.query("COMMIT");
+
+    return result;
+  } catch (error) {
+    await client?.query("ROLLBACK");
+
+    if (error instanceof ApplicationError) {
+      throw error;
+    }
+
+    throw new ServiceError({
+      message: "Erro durante transação no banco de dados.",
+      cause: error,
+    });
+  } finally {
+    await client?.end();
+  }
+}
+
 async function getNewClient() {
   const client = new Client({
     host: process.env.POSTGRES_HOST ?? "",
@@ -46,6 +77,7 @@ async function getNewClient() {
 const database = {
   query,
   getNewClient,
+  transaction,
 };
 
 export default database;

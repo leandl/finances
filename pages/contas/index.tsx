@@ -237,7 +237,9 @@ function AccountList({
       {accounts.map((account) => (
         <Card key={account.id}>
           <Card.Heading>Conta</Card.Heading>
-          <Card.Description>{account.name}</Card.Description>
+          <Card.Description>
+            <a href={`/contas/${account.id}`}>{account.name}</a>
+          </Card.Description>
           <Card.Metadata>
             Criada em {new Date(account.created_at).toLocaleDateString("pt-BR")}
           </Card.Metadata>
